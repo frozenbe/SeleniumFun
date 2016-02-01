@@ -22,7 +22,7 @@ public class QAJobsSender {
 				"/home/feliks/Downloads/chromedriver");
 		List<String> inputList = new ArrayList<String>();
 		// Read user input
-		readInput(inputList);
+		inputList = readInput(inputList);
 
 		driver = new ChromeDriver();
 		driver.get("http://ca.indeed.com/");
@@ -89,7 +89,7 @@ public class QAJobsSender {
 	 * Input by index: 0 search keywords 1 search location 2 applicant user name
 	 * 3 applicant email 4 applicant phone number 5 path to resume file
 	 */
-	public static void readInput(List<String> inputList) {
+	public static List<String> readInput(List<String> inputList) {
 		// Read in the search related input
 		Scanner stdin = new Scanner(System.in);
 
@@ -107,6 +107,8 @@ public class QAJobsSender {
 		inputList.add(stdin.nextLine());
 		
 		stdin.close();
+		
+		return inputList;
 
 	}
 
