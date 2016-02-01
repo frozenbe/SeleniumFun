@@ -13,6 +13,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class QAJobsSender {
+	
+	private static WebDriver driver;
 
 	public static void main(String[] args) throws Exception {
 		// Create chrome driver
@@ -22,7 +24,7 @@ public class QAJobsSender {
 		// Read user input
 		readInput(inputList);
 
-		WebDriver driver = new ChromeDriver();
+		driver = new ChromeDriver();
 		driver.get("http://ca.indeed.com/");
 
 		// Fill out the search parameters
