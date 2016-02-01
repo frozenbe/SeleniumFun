@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
@@ -25,7 +26,8 @@ public class QAJobsSenderTest {
 				QAJobsSender.readInput(new ArrayList<String>()));
 	}
 
-	// @Test
+	@Ignore
+	@Test
 	public void testFillOutFormAndSubmit() {
 		fail("Not yet implemented");
 	}
