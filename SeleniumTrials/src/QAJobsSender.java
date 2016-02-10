@@ -32,16 +32,64 @@ public class QAJobsSender {
 		// increasing number of results per page and sort by date
 		fillOutSearchParams(inputList);
 
-		// Open job application page for each posting result
+		// Store all job postings and call method open job application page for
+		// each posting result
 		List<WebElement> jobPostings = driver.findElements(By
 				.xpath("//*[contains(@data-tn-element, 'jobTitle')]"));
 		navigateThroughPostings(jobPostings);
 
-		System.out.println("Completed page 1!");
+		System.out.println("Completed resume submission!");
 		driver.close();
 
 	}
 
+	/*
+	 * Input by index: 0 search keywords 1 search location 2 applicant user name
+	 * 3 applicant email 4 applicant phone number 5 path to resume file
+	 */
+	public static List<String> readInput(List<String> inputList) {
+		// Read in the search related input
+		Scanner stdin = new Scanner(System.in);
+
+		System.out.println("Enter the search keywords: ");
+		inputList.add(stdin.nextLine());
+		System.out.println("Enter the search location: ");
+		inputList.add(stdin.nextLine());
+		System.out.println("Enter applicant name: ");
+		inputList.add(stdin.nextLine());
+		System.out.println("Enter applicant email: ");
+		inputList.add(stdin.nextLine());
+		System.out.println("Enter applicant phone num: ");
+		inputList.add(stdin.nextLine());
+		System.out.println("Enter path to applicant resume file: ");
+		inputList.add(stdin.nextLine());
+
+		stdin.close();
+		return inputList;
+	}
+
+	/*
+	 * Fill out the search parameters on indeed home page using user inputted
+	 * values
+	 */
+	private static void fillOutSearchParams(List<String> inputList) {
+		// Fill out the search parameters
+		driver.findElement(By.id("what")).sendKeys(inputList.get(0));
+		driver.findElement(By.id("where")).clear();
+		driver.findElement(By.id("where")).sendKeys(inputList.get(1));
+		// Go to the results page
+		driver.findElement(By.id("fj")).click();
+		// Make it possible to have 50 postings per page
+		String urlExpandedResults = driver.getCurrentUrl() + "&limit=50";
+		driver.navigate().to(urlExpandedResults);
+		// Sort by date
+		driver.findElement(By.linkText("date")).click();
+	}
+
+	/*
+	 * Go over the different job postings, click on the apply button, and return
+	 * to results page when application submission is finished.
+	 */
 	private static void navigateThroughPostings(List<WebElement> jobPostings)
 			throws Exception {
 		for (WebElement webElement : jobPostings) {
@@ -82,65 +130,9 @@ public class QAJobsSender {
 		}
 	}
 
-	private static void fillOutSearchParams(List<String> inputList) {
-		// Fill out the search parameters
-		driver.findElement(By.id("what")).sendKeys(inputList.get(0));
-		driver.findElement(By.id("where")).clear();
-		driver.findElement(By.id("where")).sendKeys(inputList.get(1));
-		// Go to the results page
-		driver.findElement(By.id("fj")).click();
-		// Make it possible to have 50 postings per page
-		String urlExpandedResults = driver.getCurrentUrl() + "&limit=50";
-		driver.navigate().to(urlExpandedResults);
-		// Sort by date
-		driver.findElement(By.linkText("date")).click();
-	}
-
 	/*
-	 * Input by index: 0 search keywords 1 search location 2 applicant user name
-	 * 3 applicant email 4 applicant phone number 5 path to resume file
+	 * Safely click on the apply button for a particular indeed job posting
 	 */
-	public static List<String> readInput(List<String> inputList) {
-		// Read in the search related input
-		Scanner stdin = new Scanner(System.in);
-
-		System.out.println("Enter the search keywords: ");
-		inputList.add(stdin.nextLine());
-		System.out.println("Enter the search location: ");
-		inputList.add(stdin.nextLine());
-		System.out.println("Enter applicant name: ");
-		inputList.add(stdin.nextLine());
-		System.out.println("Enter applicant email: ");
-		inputList.add(stdin.nextLine());
-		System.out.println("Enter applicant phone num: ");
-		inputList.add(stdin.nextLine());
-		System.out.println("Enter path to applicant resume file: ");
-		inputList.add(stdin.nextLine());
-
-		stdin.close();
-
-		return inputList;
-
-	}
-
-	public static void fillOutFormAndSubmit(WebDriver driver,
-			List<String> inputList) throws InterruptedException {
-
-		driver.switchTo().frame(0);
-		driver.switchTo().frame(0);
-
-		driver.findElement(By.id("applicant.name")).sendKeys(inputList.get(2));
-		driver.findElement(By.id("applicant.email")).sendKeys(inputList.get(3));
-		driver.findElement(By.id("applicant.phoneNumber")).sendKeys(
-				inputList.get(4));
-
-		driver.findElement(By.id("resume")).sendKeys(inputList.get(5));
-
-		driver.findElement(By.id("apply")).click();
-
-		Thread.sleep(3500);
-	}
-
 	public static void safeJavaScriptClick(WebElement element,
 			WebDriver driver, List<String> inputList) throws Exception {
 		try {
@@ -164,5 +156,29 @@ public class QAJobsSender {
 			System.out.println("Unable to click on element "
 					+ e.getStackTrace());
 		}
+	}
+
+	/*
+	 * Fill out the indeed application form for a particular job posting
+	 */
+	public static void fillOutFormAndSubmit(WebDriver driver,
+			List<String> inputList) throws InterruptedException {
+
+		driver.switchTo().frame(0);
+		driver.switchTo().frame(0);
+
+		driver.findElement(By.id("applicant.name")).sendKeys(inputList.get(2));
+		driver.findElement(By.id("applicant.email")).sendKeys(inputList.get(3));
+		driver.findElement(By.id("applicant.phoneNumber")).sendKeys(
+				inputList.get(4));
+
+		driver.findElement(By.id("resume")).sendKeys(inputList.get(5));
+
+		By applyLocator = (driver.findElements(By.id("apply")).size() > 0) ? (By
+				.id("apply")) : (By.linkText("Continue"));
+
+		driver.findElement(applyLocator).click();
+
+		Thread.sleep(3500);
 	}
 }
