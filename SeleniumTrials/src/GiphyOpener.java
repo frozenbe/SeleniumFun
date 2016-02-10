@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.openqa.selenium.By;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,19 +19,26 @@ public class GiphyOpener {
 		// Create chrome driver
 		System.setProperty("webdriver.chrome.driver",
 				"/home/feliks/Downloads/chromedriver");
+
+		Scanner stdin = new Scanner(System.in);
+
+		System.out.println("Enter the search keywords: ");
 		WebDriver driver = new ChromeDriver();
 		driver.get("http://www.giphy.com/");
 		Thread.sleep(1000);
 
 		// Fill out the search parameters
-		driver.findElement(By.id("search-box")).sendKeys(
-				"happy birthday cartoon");
+		driver.findElement(By.id("search-box")).sendKeys(stdin.nextLine());
+		stdin.close();
 		// Go to the results page
 		driver.findElement(By.id("search-button")).click();
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 
 		By locator = By.cssSelector("a[href*='/gifs/']");
 		clickByLocator(locator, driver);
+
+		System.out.println("Number of broken links: ");
+		driver.close();
 
 	}
 
@@ -54,7 +61,7 @@ public class GiphyOpener {
 
 		for (String giphyUrl : giphysUrl) {
 			driver.navigate().to(giphyUrl);
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 		}
 
 	}
