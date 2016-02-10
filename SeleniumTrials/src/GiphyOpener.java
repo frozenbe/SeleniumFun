@@ -21,14 +21,15 @@ public class GiphyOpener {
 				"/home/feliks/Downloads/chromedriver");
 
 		Scanner stdin = new Scanner(System.in);
-
 		System.out.println("Enter the search keywords: ");
+		String searchQuery = stdin.nextLine();
+
 		WebDriver driver = new ChromeDriver();
 		driver.get("http://www.giphy.com/");
 		Thread.sleep(1000);
 
 		// Fill out the search parameters
-		driver.findElement(By.id("search-box")).sendKeys(stdin.nextLine());
+		driver.findElement(By.id("search-box")).sendKeys(searchQuery);
 		stdin.close();
 		// Go to the results page
 		driver.findElement(By.id("search-button")).click();
