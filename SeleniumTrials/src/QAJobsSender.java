@@ -13,7 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class QAJobsSender {
-	
+
 	private static WebDriver driver;
 
 	public static void main(String[] args) throws Exception {
@@ -27,17 +27,9 @@ public class QAJobsSender {
 		driver = new ChromeDriver();
 		driver.get("http://ca.indeed.com/");
 
-		// Fill out the search parameters
-		driver.findElement(By.id("what")).sendKeys(inputList.get(0));
-		driver.findElement(By.id("where")).clear();
-		driver.findElement(By.id("where")).sendKeys(inputList.get(1));
-		// Go to the results page
-		driver.findElement(By.id("fj")).click();
-		// Make it possible to have 50 postings per page
-		String urlExpandedResults = driver.getCurrentUrl() + "&limit=50";
-		driver.navigate().to(urlExpandedResults);
-		// Sort by date
-		driver.findElement(By.linkText("date")).click();
+		// Fill out search parameters and modify results parameters, by
+		// increasing number of results per page and sort by date
+		fillOutSearchParams(inputList);
 
 		// Open postings pages for each posting
 		List<WebElement> jobPostings = driver.findElements(By
@@ -85,6 +77,20 @@ public class QAJobsSender {
 
 	}
 
+	private static void fillOutSearchParams(List<String> inputList) {
+		// Fill out the search parameters
+		driver.findElement(By.id("what")).sendKeys(inputList.get(0));
+		driver.findElement(By.id("where")).clear();
+		driver.findElement(By.id("where")).sendKeys(inputList.get(1));
+		// Go to the results page
+		driver.findElement(By.id("fj")).click();
+		// Make it possible to have 50 postings per page
+		String urlExpandedResults = driver.getCurrentUrl() + "&limit=50";
+		driver.navigate().to(urlExpandedResults);
+		// Sort by date
+		driver.findElement(By.linkText("date")).click();
+	}
+
 	/*
 	 * Input by index: 0 search keywords 1 search location 2 applicant user name
 	 * 3 applicant email 4 applicant phone number 5 path to resume file
@@ -105,9 +111,9 @@ public class QAJobsSender {
 		inputList.add(stdin.nextLine());
 		System.out.println("Enter path to applicant resume file: ");
 		inputList.add(stdin.nextLine());
-		
+
 		stdin.close();
-		
+
 		return inputList;
 
 	}
