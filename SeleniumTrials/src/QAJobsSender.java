@@ -15,12 +15,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class QAJobsSender {
 
 	private static WebDriver driver;
+	private static List<String> inputList;
 
 	public static void main(String[] args) throws Exception {
 		// Create chrome driver
 		System.setProperty("webdriver.chrome.driver",
 				"/home/feliks/Downloads/chromedriver");
-		List<String> inputList = new ArrayList<String>();
+		inputList = new ArrayList<String>();
 		// Read user input
 		inputList = readInput(inputList);
 
@@ -31,10 +32,18 @@ public class QAJobsSender {
 		// increasing number of results per page and sort by date
 		fillOutSearchParams(inputList);
 
-		// Open postings pages for each posting
+		// Open job application page for each posting result
 		List<WebElement> jobPostings = driver.findElements(By
 				.xpath("//*[contains(@data-tn-element, 'jobTitle')]"));
+		navigateThroughPostings(jobPostings);
 
+		System.out.println("Completed page 1!");
+		driver.close();
+
+	}
+
+	private static void navigateThroughPostings(List<WebElement> jobPostings)
+			throws Exception {
 		for (WebElement webElement : jobPostings) {
 			webElement.click();
 
@@ -71,10 +80,6 @@ public class QAJobsSender {
 													// original window
 
 		}
-
-		System.out.println("Completed page 1!");
-		driver.close();
-
 	}
 
 	private static void fillOutSearchParams(List<String> inputList) {
